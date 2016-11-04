@@ -1,4 +1,4 @@
-mirrorsŽ‚
+mirrors¶‚
 (function(a,b){
 "use strict";
 var c=a.Array;
@@ -146,6 +146,7 @@ Catch:4,
 Block:5,
 Script:6,
 Eval:7,
+Module:8,
 };
 function Mirror(D){
 this.type_=D;
@@ -4393,7 +4394,7 @@ ApplySingleChunkPatch:ApplySingleChunkPatch
 a.Debug.LiveEdit=bU;
 })
 
-L prologueåF
+H prologueåF
 (function(a,b,c){
 "use strict";
 %CheckIsBootstrapping();
@@ -6044,140 +6045,207 @@ aF.PackedArrayReverse=PackedArrayReverse;
 ]);
 });
 
-stringy
+string†
 (function(a,b){
 %CheckIsBootstrapping();
 var c;
-var d;
-var e=a.RegExp;
-var f=a.String;
+var d=a.RegExp;
+var e=a.String;
+var f;
 var g;
-var h;
-var i=b.ImportNow("match_symbol");
-var j=b.ImportNow("replace_symbol");
-var k=b.ImportNow("search_symbol");
-var l=b.ImportNow("split_symbol");
-b.Import(function(m){
-c=m.ArrayJoin;
-d=m.GetSubstitution;
-g=m.MaxSimple;
-h=m.MinSimple;
+var h=b.ImportNow("match_symbol");
+var i=b.ImportNow("replace_symbol");
+var j=b.ImportNow("search_symbol");
+var k=b.ImportNow("split_symbol");
+b.Import(function(l){
+c=l.ArrayJoin;
+f=l.MaxSimple;
+g=l.MinSimple;
 });
-function StringConcat(n){
+function StringConcat(m){
 "use strict";
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.concat");
-var o=(%_ToString(this));
-var p=arguments.length;
-for(var q=0;q<p;++q){
-o=o+(%_ToString(arguments[q]));
+var n=(%_ToString(this));
+var o=arguments.length;
+for(var p=0;p<o;++p){
+n=n+(%_ToString(arguments[p]));
 }
-return o;
+return n;
 }
-function StringMatchJS(r){
+function StringMatchJS(q){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.match");
-if(!(r==null)){
-var s=r[i];
-if(!(s===(void 0))){
-return %_Call(s,r,this);
+if(!(q==null)){
+var r=q[h];
+if(!(r===(void 0))){
+return %_Call(r,q,this);
 }
 }
-var t=(%_ToString(this));
-var u=%RegExpCreate(r);
-return u[i](t);
+var s=(%_ToString(this));
+var t=%RegExpCreate(q);
+return t[h](s);
 }
-function StringReplace(v,w){
+function GetSubstitution(u,v,w,x,y){
+var z=u.length;
+var A=v.length;
+var B=x.length;
+var C=w+z;
+var D="";
+var E,F,G,H,I,J,K;
+var H=%StringIndexOf(y,'$',0);
+if(H<0){
+D+=y;
+return D;
+}
+if(H>0)D+=%_SubString(y,0,H);
+while(true){
+F='$';
+E=H+1;
+if(E<y.length){
+G=%_StringCharCodeAt(y,E);
+if(G==36){
+++E;
+D+='$';
+}else if(G==38){
+++E;
+D+=u;
+}else if(G==96){
+++E;
+D+=%_SubString(v,0,w);
+}else if(G==39){
+++E;
+D+=%_SubString(v,C,A);
+}else if(G>=48&&G<=57){
+I=(G-48);
+J=1;
+if(E+1<y.length){
+H=%_StringCharCodeAt(y,E+1);
+if(H>=48&&H<=57){
+K=I*10+((H-48));
+if(K<B){
+I=K;
+J=2;
+}
+}
+}
+if(I!=0&&I<B){
+var L=x.at(I);
+if(!(L===(void 0)))D+=L;
+E+=J;
+}else{
+D+='$';
+}
+}else{
+D+='$';
+}
+}else{
+D+='$';
+}
+H=%StringIndexOf(y,'$',E);
+if(H<0){
+if(E<y.length){
+D+=%_SubString(y,E,y.length);
+}
+return D;
+}
+if(H>E){
+D+=%_SubString(y,E,H);
+}
+}
+return D;
+}
+function StringReplace(M,N){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.replace");
-if(!(v==null)){
-var x=v[j];
-if(!(x===(void 0))){
-return %_Call(x,v,this,w);
+if(!(M==null)){
+var O=M[i];
+if(!(O===(void 0))){
+return %_Call(O,M,this,N);
 }
 }
-var t=(%_ToString(this));
-v=(%_ToString(v));
-if(v.length==1&&
-t.length>0xFF&&
-(typeof(w)==='string')&&
-%StringIndexOf(w,'$',0)<0){
-return %StringReplaceOneCharWithString(t,v,w);
+var s=(%_ToString(this));
+M=(%_ToString(M));
+if(M.length==1&&
+s.length>0xFF&&
+(typeof(N)==='string')&&
+%StringIndexOf(N,'$',0)<0){
+return %StringReplaceOneCharWithString(s,M,N);
 }
-var y=%StringIndexOf(t,v,0);
-if(y<0)return t;
-var z=y+v.length;
-var A=%_SubString(t,0,y);
-if((typeof(w)==='function')){
-A+=w(v,y,t);
+var P=%StringIndexOf(s,M,0);
+if(P<0)return s;
+var Q=P+M.length;
+var D=%_SubString(s,0,P);
+if((typeof(N)==='function')){
+D+=N(M,P,s);
 }else{
-const captures={length:1};
-const matched=%_SubString(t,y,z);
-A+=d(matched,t,y,captures,
-(%_ToString(w)));
+const x={length:1};
+const u=%_SubString(s,P,Q);
+D+=GetSubstitution(u,s,P,x,
+(%_ToString(N)));
 }
-return A+%_SubString(t,z,t.length);
+return D+%_SubString(s,Q,s.length);
 }
-function StringSearch(r){
+function StringSearch(q){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.search");
-if(!(r==null)){
-var B=r[k];
-if(!(B===(void 0))){
-return %_Call(B,r,this);
+if(!(q==null)){
+var R=q[j];
+if(!(R===(void 0))){
+return %_Call(R,q,this);
 }
 }
-var t=(%_ToString(this));
-var u=%RegExpCreate(r);
-return %_Call(u[k],u,t);
+var s=(%_ToString(this));
+var t=%RegExpCreate(q);
+return %_Call(t[j],t,s);
 }
-function StringSlice(y,z){
+function StringSlice(P,Q){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.slice");
-var o=(%_ToString(this));
-var C=o.length;
-var D=(%_ToInteger(y));
-var E=C;
-if(!(z===(void 0))){
-E=(%_ToInteger(z));
+var n=(%_ToString(this));
+var S=n.length;
+var T=(%_ToInteger(P));
+var U=S;
+if(!(Q===(void 0))){
+U=(%_ToInteger(Q));
 }
-if(D<0){
-D+=C;
-if(D<0){
-D=0;
-}
-}else{
-if(D>C){
-return'';
-}
-}
-if(E<0){
-E+=C;
-if(E<0){
-return'';
+if(T<0){
+T+=S;
+if(T<0){
+T=0;
 }
 }else{
-if(E>C){
-E=C;
-}
-}
-if(E<=D){
+if(T>S){
 return'';
 }
-return %_SubString(o,D,E);
 }
-function StringSplitJS(F,G){
+if(U<0){
+U+=S;
+if(U<0){
+return'';
+}
+}else{
+if(U>S){
+U=S;
+}
+}
+if(U<=T){
+return'';
+}
+return %_SubString(n,T,U);
+}
+function StringSplitJS(V,W){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.split");
-if(!(F==null)){
-var H=F[l];
-if(!(H===(void 0))){
-return %_Call(H,F,this,G);
+if(!(V==null)){
+var X=V[k];
+if(!(X===(void 0))){
+return %_Call(X,V,this,W);
 }
 }
-var t=(%_ToString(this));
-G=((G===(void 0)))?4294967295:((G)>>>0);
-var I=t.length;
-var J=(%_ToString(F));
-if(G===0)return[];
-if((F===(void 0)))return[t];
-var K=J.length;
-if(K===0)return %StringToArray(t,G);
-return %StringSplit(t,J,G);
+var s=(%_ToString(this));
+W=((W===(void 0)))?4294967295:((W)>>>0);
+var Y=s.length;
+var Z=(%_ToString(V));
+if(W===0)return[];
+if((V===(void 0)))return[s];
+var aa=Z.length;
+if(aa===0)return %StringToArray(s,W);
+return %StringSplit(s,Z,W);
 }
 function StringToLowerCaseJS(){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.toLowerCase");
@@ -6195,12 +6263,12 @@ function StringToLocaleUpperCase(){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.toLocaleUpperCase");
 return %StringToUpperCase((%_ToString(this)));
 }
-function HtmlEscape(L){
-return %_Call(StringReplace,(%_ToString(L)),/"/g,"&quot;");
+function HtmlEscape(ab){
+return %_Call(StringReplace,(%_ToString(ab)),/"/g,"&quot;");
 }
-function StringAnchor(M){
+function StringAnchor(ac){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.anchor");
-return"<a name=\""+HtmlEscape(M)+"\">"+(%_ToString(this))+
+return"<a name=\""+HtmlEscape(ac)+"\">"+(%_ToString(this))+
 "</a>";
 }
 function StringBig(){
@@ -6219,23 +6287,23 @@ function StringFixed(){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.fixed");
 return"<tt>"+(%_ToString(this))+"</tt>";
 }
-function StringFontcolor(N){
+function StringFontcolor(ad){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.fontcolor");
-return"<font color=\""+HtmlEscape(N)+"\">"+(%_ToString(this))+
+return"<font color=\""+HtmlEscape(ad)+"\">"+(%_ToString(this))+
 "</font>";
 }
-function StringFontsize(O){
+function StringFontsize(ae){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.fontsize");
-return"<font size=\""+HtmlEscape(O)+"\">"+(%_ToString(this))+
+return"<font size=\""+HtmlEscape(ae)+"\">"+(%_ToString(this))+
 "</font>";
 }
 function StringItalics(){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.italics");
 return"<i>"+(%_ToString(this))+"</i>";
 }
-function StringLink(o){
+function StringLink(n){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.link");
-return"<a href=\""+HtmlEscape(o)+"\">"+(%_ToString(this))+"</a>";
+return"<a href=\""+HtmlEscape(n)+"\">"+(%_ToString(this))+"</a>";
 }
 function StringSmall(){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.small");
@@ -6253,59 +6321,59 @@ function StringSup(){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.sup");
 return"<sup>"+(%_ToString(this))+"</sup>";
 }
-function StringRepeat(P){
+function StringRepeat(af){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.repeat");
-var o=(%_ToString(this));
-var Q=(%_ToInteger(P));
-if(Q<0||Q===(1/0))throw %make_range_error(158);
-if(o.length===0)return"";
-if(Q>%_MaxSmi())throw %make_range_error(158);
-var R="";
+var n=(%_ToString(this));
+var ag=(%_ToInteger(af));
+if(ag<0||ag===(1/0))throw %make_range_error(158);
+if(n.length===0)return"";
+if(ag>%_MaxSmi())throw %make_range_error(158);
+var ah="";
 while(true){
-if(Q&1)R+=o;
-Q>>=1;
-if(Q===0)return R;
-o+=o;
+if(ag&1)ah+=n;
+ag>>=1;
+if(ag===0)return ah;
+n+=n;
 }
 }
-function StringCodePointAt(S){
+function StringCodePointAt(E){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.codePointAt");
-var T=(%_ToString(this));
-var O=T.length;
-S=(%_ToInteger(S));
-if(S<0||S>=O){
+var v=(%_ToString(this));
+var ae=v.length;
+E=(%_ToInteger(E));
+if(E<0||E>=ae){
 return(void 0);
 }
-var U=%_StringCharCodeAt(T,S);
-if(U<0xD800||U>0xDBFF||S+1==O){
-return U;
+var ai=%_StringCharCodeAt(v,E);
+if(ai<0xD800||ai>0xDBFF||E+1==ae){
+return ai;
 }
-var V=%_StringCharCodeAt(T,S+1);
-if(V<0xDC00||V>0xDFFF){
-return U;
+var aj=%_StringCharCodeAt(v,E+1);
+if(aj<0xDC00||aj>0xDFFF){
+return ai;
 }
-return(U-0xD800)*0x400+V+0x2400;
+return(ai-0xD800)*0x400+aj+0x2400;
 }
-function StringRaw(W){
+function StringRaw(ak){
 "use strict";
-var X=arguments.length;
-var Y=(%_ToObject(W));
-var Z=(%_ToObject(Y.raw));
-var aa=(%_ToLength(Z.length));
-if(aa<=0)return"";
-var A=(%_ToString(Z[0]));
-for(var q=1;q<aa;++q){
-if(q<X){
-A+=(%_ToString(arguments[q]));
+var al=arguments.length;
+var am=(%_ToObject(ak));
+var an=(%_ToObject(am.raw));
+var ao=(%_ToLength(an.length));
+if(ao<=0)return"";
+var D=(%_ToString(an[0]));
+for(var p=1;p<ao;++p){
+if(p<al){
+D+=(%_ToString(arguments[p]));
 }
-A+=(%_ToString(Z[q]));
+D+=(%_ToString(an[p]));
 }
-return A;
+return D;
 }
-b.InstallFunctions(f,2,[
+b.InstallFunctions(e,2,[
 "raw",StringRaw
 ]);
-b.InstallFunctions(f.prototype,2,[
+b.InstallFunctions(e.prototype,2,[
 "codePointAt",StringCodePointAt,
 "concat",StringConcat,
 "match",StringMatchJS,
@@ -6332,89 +6400,11 @@ b.InstallFunctions(f.prototype,2,[
 "sub",StringSub,
 "sup",StringSup
 ]);
-b.Export(function(ab){
-ab.StringMatch=StringMatchJS;
-ab.StringReplace=StringReplace;
-ab.StringSlice=StringSlice;
-ab.StringSplit=StringSplitJS;
-});
-})
-
-regexpÑ
-(function(a,b){
-'use strict';
-%CheckIsBootstrapping();
-function GetSubstitution(c,d,e,f,g){
-var h=c.length;
-var i=d.length;
-var j=f.length;
-var k=e+h;
-var l="";
-var m,n,o,p,q,r,s;
-var p=%StringIndexOf(g,'$',0);
-if(p<0){
-l+=g;
-return l;
-}
-if(p>0)l+=%_SubString(g,0,p);
-while(true){
-n='$';
-m=p+1;
-if(m<g.length){
-o=%_StringCharCodeAt(g,m);
-if(o==36){
-++m;
-l+='$';
-}else if(o==38){
-++m;
-l+=c;
-}else if(o==96){
-++m;
-l+=%_SubString(d,0,e);
-}else if(o==39){
-++m;
-l+=%_SubString(d,k,i);
-}else if(o>=48&&o<=57){
-q=(o-48);
-r=1;
-if(m+1<g.length){
-p=%_StringCharCodeAt(g,m+1);
-if(p>=48&&p<=57){
-s=q*10+((p-48));
-if(s<j){
-q=s;
-r=2;
-}
-}
-}
-if(q!=0&&q<j){
-var t=f.at(q);
-if(!(t===(void 0)))l+=t;
-m+=r;
-}else{
-l+='$';
-}
-}else{
-l+='$';
-}
-}else{
-l+='$';
-}
-p=%StringIndexOf(g,'$',m);
-if(p<0){
-if(m<g.length){
-l+=%_SubString(g,m,g.length);
-}
-return l;
-}
-if(p>m){
-l+=%_SubString(g,m,p);
-}
-}
-return l;
-}
-b.Export(function(u){
-u.GetSubstitution=GetSubstitution;
+b.Export(function(ap){
+ap.StringMatch=StringMatchJS;
+ap.StringReplace=StringReplace;
+ap.StringSlice=StringSlice;
+ap.StringSplit=StringSplitJS;
 });
 })
 
@@ -9136,7 +9126,7 @@ n.SetValues=SetValues;
 });
 })
 
-promise-Ž
+promiseÑŽ
 (function(a,b,c){
 "use strict";
 %CheckIsBootstrapping();
@@ -9170,7 +9160,7 @@ p=t.SpeciesConstructor;
 });
 const kPending=0;
 const kFulfilled=+1;
-const kRejected=-1;
+const kRejected=+2;
 function CreateResolvingFunctions(u,v){
 var w=false;
 var x=value=>{
@@ -9181,7 +9171,8 @@ ResolvePromise(u,value);
 var y=reason=>{
 if(w===true)return;
 w=true;
-RejectPromise(u,reason,v);
+%PromiseReject(u,reason,v);
+PromiseSet(u,kRejected,reason);
 };
 return{
 __proto__:null,
@@ -9226,145 +9217,138 @@ return PromiseSet(u,D,E);
 function PromiseInit(u){
 return PromiseSet(u,kPending,(void 0));
 }
-function FulfillPromise(u,D,E,F){
-if((u[n])===kPending){
-var G=(u[F]);
-if(!(G===(void 0))){
-var H=(u[k]);
-PromiseEnqueue(E,G,H,D);
-}
-PromiseSet(u,D,E);
-}
-}
-function PromiseHandle(E,I,H){
+function PromiseHandle(E,F,G){
 var C=(%_DebugIsActive()!=0);
 try{
-if(C)%DebugPushPromise(H.promise);
-var J=I(E);
-if((H.resolve===(void 0))){
-ResolvePromise(H.promise,J);
+if(C)%DebugPushPromise(G.promise);
+var H=F(E);
+if((G.resolve===(void 0))){
+ResolvePromise(G.promise,H);
 }else{
-%_Call(H.resolve,(void 0),J);
+%_Call(G.resolve,(void 0),H);
 }
 }%catch(exception){
 try{
-if((H.reject===(void 0))){
-RejectPromise(H.promise,exception,false);
+if((G.reject===(void 0))){
+%PromiseReject(G.promise,exception,false);
+PromiseSet(G.promise,kRejected,exception);
 }else{
-%_Call(H.reject,(void 0),exception);
+%_Call(G.reject,(void 0),exception);
 }
 }catch(e){}
 }finally{
 if(C)%DebugPopPromise();
 }
 }
-function PromiseEnqueue(E,G,K,D){
-var L,M,N=(%_DebugIsActive()!=0);
-if(N){
-if(!(K===(void 0))&&
-(%_Call(s,K.promise,f))&&
-(%_Call(s,(K.promise[f]),e))){
-L=((K.promise[f])[e]);
-M="async function";
+function PromiseDebugGetInfo(I,D){
+var J,K,L=(%_DebugIsActive()!=0);
+if(L){
+if(!(I===(void 0))&&
+(%_Call(s,I.promise,f))&&
+(%_Call(s,(I.promise[f]),e))){
+J=((I.promise[f])[e]);
+K="async function";
 }else{
-L=%DebugNextMicrotaskId();
-M=D===kFulfilled?"Promise.resolve":"Promise.reject";
-%DebugAsyncTaskEvent("enqueue",L,M);
+J=%DebugNextMicrotaskId();
+K=D===kFulfilled?"Promise.resolve":"Promise.reject";
+%DebugAsyncTaskEvent("enqueue",J,K);
 }
 }
-%EnqueuePromiseReactionJob(E,G,K,L,M);
+return[J,K];
 }
-function PromiseAttachCallbacks(u,H,O,P){
-var Q=
+function PromiseAttachCallbacks(u,G,M,N){
+var O=
 (u[j]);
-if((Q===(void 0))){
-(u[j]=O);
-(u[i]=P);
-(u[k]=H);
-}else if(!(%_IsArray(Q))){
-var R=new d();
-var S=new d();
-var T=(u[k]);
-R.push(
-Q,T,O,H);
-S.push((u[i]),
-T,
-P,
-H);
-(u[j]=R);
-(u[i]=S);
+if((O===(void 0))){
+(u[j]=M);
+(u[i]=N);
+(u[k]=G);
+}else if(!(%_IsArray(O))){
+var P=new d();
+var Q=new d();
+var R=(u[k]);
+P.push(
+O,R,M,G);
+Q.push((u[i]),
+R,
+N,
+G);
+(u[j]=P);
+(u[i]=Q);
 (u[k]=(void 0));
 }else{
-Q.push(O,H);
-(u[i]).push(P,H);
+O.push(M,G);
+(u[i]).push(N,G);
 }
 }
-function PromiseIdResolveHandler(U){return U;}
-function PromiseIdRejectHandler(V){%_ReThrow(V);}
+function PromiseIdResolveHandler(S){return S;}
+function PromiseIdRejectHandler(T){%_ReThrow(T);}
 (PromiseIdRejectHandler[g]=true);
-function IsPromise(U){
-return(%_IsJSReceiver(U))&&(!(U[n]===(void 0)));
+function IsPromise(S){
+return(%_IsJSReceiver(S))&&(!(S[n]===(void 0)));
 }
 function PromiseCreate(){
 return PromiseInit(new z(m));
 }
-function ResolvePromise(u,W){
-if(W===u){
-return RejectPromise(u,
-%make_type_error(83,W),
-true);
+function ResolvePromise(u,U){
+if(U===u){
+var V=%make_type_error(83,U);
+%PromiseReject(u,V,true);
+PromiseSet(u,kRejected,V);
+return;
 }
-if((%_IsJSReceiver(W))){
+if((%_IsJSReceiver(U))){
 try{
-var X=W.then;
+var W=U.then;
 }catch(e){
-return RejectPromise(u,e,true);
+%PromiseReject(u,e,true);
+PromiseSet(u,kRejected,e);
+return;
 }
-if(IsPromise(W)&&X===PromiseThen){
-var Y=(W[n]);
-if(Y===kFulfilled){
-var Z=(W[o]);
-FulfillPromise(u,kFulfilled,Z,
+if(IsPromise(U)&&W===PromiseThen){
+var X=(U[n]);
+if(X===kFulfilled){
+var Y=(U[o]);
+%PromiseFulfill(u,kFulfilled,Y,
 j);
+PromiseSet(u,kFulfilled,Y);
 (u[h]=true);
 return;
-}else if(Y===kRejected){
-var Z=(W[o]);
-if(!(!(W[h]===(void 0)))){
-%PromiseRevokeReject(W);
+}else if(X===kRejected){
+var Y=(U[o]);
+if(!(!(U[h]===(void 0)))){
+%PromiseRevokeReject(U);
 }
-RejectPromise(u,Z,false);
-(W[h]=true);
+%PromiseReject(u,Y,false);
+PromiseSet(u,kRejected,Y);
+(U[h]=true);
 return;
 }
 }
-if((typeof(X)==='function')){
+if((typeof(W)==='function')){
 var B=CreateResolvingFunctions(u,false);
-if((%_DebugIsActive()!=0)&&IsPromise(W)){
-(W[f]=u);
+if((%_DebugIsActive()!=0)&&IsPromise(U)){
+(U[f]=u);
 }
 %EnqueuePromiseResolveThenableJob(
-W,X,B.resolve,B.reject);
+U,W,B.resolve,B.reject);
 return;
 }
 }
-FulfillPromise(u,kFulfilled,W,
+%PromiseFulfill(u,kFulfilled,U,
 j);
+PromiseSet(u,kFulfilled,U);
 }
-function RejectPromise(u,aa,v){
-if((u[n])===kPending){
-if((v&&(%_DebugIsActive()!=0))||
-!(!(u[h]===(void 0)))){
-%PromiseRejectEvent(u,aa,v);
+function RejectPromise(u,Z){
+%PromiseReject(u,Z,false);
+PromiseSet(u,kRejected,Z);
 }
+function DoRejectPromise(u,Z){
+%PromiseReject(u,Z,true);
+PromiseSet(u,kRejected,Z);
 }
-FulfillPromise(u,kRejected,aa,i)
-}
-function DoRejectPromise(u,aa){
-return RejectPromise(u,aa,true);
-}
-function NewPromiseCapability(ab,v){
-if(ab===z){
+function NewPromiseCapability(aa,v){
+if(aa===z){
 var u=PromiseCreate();
 var B=CreateResolvingFunctions(u,v);
 return{
@@ -9373,180 +9357,180 @@ resolve:B.resolve,
 reject:B.reject
 };
 }
-var J={promise:(void 0),resolve:(void 0),reject:(void 0)};
-J.promise=new ab((x,y)=>{
-if(!(J.resolve===(void 0))||!(J.reject===(void 0)))
+var H={promise:(void 0),resolve:(void 0),reject:(void 0)};
+H.promise=new aa((x,y)=>{
+if(!(H.resolve===(void 0))||!(H.reject===(void 0)))
 throw %make_type_error(84);
-J.resolve=x;
-J.reject=y;
+H.resolve=x;
+H.reject=y;
 });
-if(!(typeof(J.resolve)==='function')||!(typeof(J.reject)==='function'))
+if(!(typeof(H.resolve)==='function')||!(typeof(H.reject)==='function'))
 throw %make_type_error(85);
-return J;
+return H;
 }
-function PromiseReject(V){
+function PromiseReject(T){
 if(!(%_IsJSReceiver(this))){
 throw %make_type_error(16,PromiseResolve);
 }
 if(this===z){
-var u=PromiseCreateAndSet(kRejected,V);
-%PromiseRejectEventFromStack(u,V);
+var u=PromiseCreateAndSet(kRejected,T);
+%PromiseRejectEventFromStack(u,T);
 return u;
 }else{
-var ac=NewPromiseCapability(this,true);
-%_Call(ac.reject,(void 0),V);
-return ac.promise;
+var ab=NewPromiseCapability(this,true);
+%_Call(ab.reject,(void 0),T);
+return ab.promise;
 }
 }
-function PerformPromiseThen(u,O,P,ad){
-if(!(typeof(O)==='function'))O=PromiseIdResolveHandler;
-if(!(typeof(P)==='function'))P=PromiseIdRejectHandler;
+function PerformPromiseThen(u,M,N,ac){
+if(!(typeof(M)==='function'))M=PromiseIdResolveHandler;
+if(!(typeof(N)==='function'))N=PromiseIdRejectHandler;
 var D=(u[n]);
 switch(D){
 case kPending:
-PromiseAttachCallbacks(u,ad,O,P);
+PromiseAttachCallbacks(u,ac,M,N);
 break;
 case kFulfilled:
-PromiseEnqueue((u[o]),
-O,ad,kFulfilled);
+%EnqueuePromiseReactionJob((u[o]),
+M,ac,kFulfilled);
 break;
 case kRejected:
 if(!(!(u[h]===(void 0)))){
 %PromiseRevokeReject(u);
 }
-PromiseEnqueue((u[o]),
-P,ad,kRejected);
+%EnqueuePromiseReactionJob((u[o]),
+N,ac,kRejected);
 break;
 }
 (u[h]=true);
-return ad.promise;
+return ac.promise;
 }
-function PromiseThen(O,P){
+function PromiseThen(M,N){
 var D=(this[n]);
 if((D===(void 0))){
 throw %make_type_error(66,this);
 }
-var ae=p(this,z);
-var ad;
-if(ae===z){
-ad={
+var ad=p(this,z);
+var ac;
+if(ad===z){
+ac={
 promise:PromiseCreate(),
 resolve:(void 0),
 reject:(void 0)
 };
 }else{
-ad=NewPromiseCapability(ae,false);
+ac=NewPromiseCapability(ad,false);
 }
-return PerformPromiseThen(this,O,P,ad);
+return PerformPromiseThen(this,M,N,ac);
 }
-function PromiseCatch(P){
-return this.then((void 0),P);
+function PromiseCatch(N){
+return this.then((void 0),N);
 }
-function PromiseResolve(U){
+function PromiseResolve(S){
 if(!(%_IsJSReceiver(this))){
 throw %make_type_error(16,PromiseResolve);
 }
-if(IsPromise(U)&&U.constructor===this)return U;
+if(IsPromise(S)&&S.constructor===this)return S;
 if(this===z){
 var u=PromiseCreate();
-ResolvePromise(u,U);
+ResolvePromise(u,S);
 return u;
 }
-var ac=NewPromiseCapability(this,true);
-%_Call(ac.resolve,(void 0),U);
-return ac.promise;
+var ab=NewPromiseCapability(this,true);
+%_Call(ab.resolve,(void 0),S);
+return ab.promise;
 }
-function PromiseAll(af){
+function PromiseAll(ae){
 if(!(%_IsJSReceiver(this))){
 throw %make_type_error(16,"Promise.all");
 }
-var H=NewPromiseCapability(this,false);
-var ag=new d();
-var ah;
-var N=(%_DebugIsActive()!=0);
-if(N){
-(H.reject[g]=true);
+var G=NewPromiseCapability(this,false);
+var af=new d();
+var ag;
+var L=(%_DebugIsActive()!=0);
+if(L){
+(G.reject[g]=true);
 }
-function CreateResolveElementFunction(ai,aj,ac){
-var ak=false;
-return(U)=>{
-if(ak===true)return;
-ak=true;
-aj[ai]=U;
-if(--ah===0){
-var al=[];
-%MoveArrayContents(aj,al);
-%_Call(ac.resolve,(void 0),al);
+function CreateResolveElementFunction(ah,ai,ab){
+var aj=false;
+return(S)=>{
+if(aj===true)return;
+aj=true;
+ai[ah]=S;
+if(--ag===0){
+var ak=[];
+%MoveArrayContents(ai,ak);
+%_Call(ab.resolve,(void 0),ak);
 }
 };
 }
 try{
-var am=0;
-ah=1;
-for(var E of af){
-var an=this.resolve(E);
-++ah;
-var ao=an.then(
-CreateResolveElementFunction(am,ag,H),
-H.reject);
-if(N&&IsPromise(ao)){
-(ao[f]=H.promise);
+var al=0;
+ag=1;
+for(var E of ae){
+var am=this.resolve(E);
+++ag;
+var an=am.then(
+CreateResolveElementFunction(al,af,G),
+G.reject);
+if(L&&IsPromise(an)){
+(an[f]=G.promise);
 }
-++am;
+++al;
 }
-if(--ah===0){
-var al=[];
-%MoveArrayContents(ag,al);
-%_Call(H.resolve,(void 0),al);
+if(--ag===0){
+var ak=[];
+%MoveArrayContents(af,ak);
+%_Call(G.resolve,(void 0),ak);
 }
 }catch(e){
-%_Call(H.reject,(void 0),e);
+%_Call(G.reject,(void 0),e);
 }
-return H.promise;
+return G.promise;
 }
-function PromiseRace(af){
+function PromiseRace(ae){
 if(!(%_IsJSReceiver(this))){
 throw %make_type_error(16,PromiseRace);
 }
-var H=NewPromiseCapability(this,false);
-var N=(%_DebugIsActive()!=0);
-if(N){
-(H.reject[g]=true);
+var G=NewPromiseCapability(this,false);
+var L=(%_DebugIsActive()!=0);
+if(L){
+(G.reject[g]=true);
 }
 try{
-for(var E of af){
-var ao=this.resolve(E).then(H.resolve,
-H.reject);
-if(N&&IsPromise(ao)){
-(ao[f]=H.promise);
+for(var E of ae){
+var an=this.resolve(E).then(G.resolve,
+G.reject);
+if(L&&IsPromise(an)){
+(an[f]=G.promise);
 }
 }
 }catch(e){
-%_Call(H.reject,(void 0),e);
+%_Call(G.reject,(void 0),e);
 }
-return H.promise;
+return G.promise;
 }
-function PromiseHasUserDefinedRejectHandlerCheck(I,H){
-if((I[g])){
-return PromiseHasUserDefinedRejectHandlerRecursive(H.promise);
+function PromiseHasUserDefinedRejectHandlerCheck(F,G){
+if((F[g])){
+return PromiseHasUserDefinedRejectHandlerRecursive(G.promise);
 }
 return true;
 }
 function PromiseHasUserDefinedRejectHandlerRecursive(u){
 if((u[l]))return true;
-var ap=(u[f]);
-if(ap&&
-PromiseHasUserDefinedRejectHandlerRecursive(ap)){
+var ao=(u[f]);
+if(ao&&
+PromiseHasUserDefinedRejectHandlerRecursive(ao)){
 return true;
 }
-var aq=(u[i]);
-var H=(u[k]);
-if((aq===(void 0)))return false;
-if(!(%_IsArray(aq))){
-return PromiseHasUserDefinedRejectHandlerCheck(aq,H);
+var ap=(u[i]);
+var G=(u[k]);
+if((ap===(void 0)))return false;
+if(!(%_IsArray(ap))){
+return PromiseHasUserDefinedRejectHandlerCheck(ap,G);
 }
-for(var am=0;am<aq.length;am+=2){
-if(PromiseHasUserDefinedRejectHandlerCheck(aq[am],aq[am+1])){
+for(var al=0;al<ap.length;al+=2){
+if(PromiseHasUserDefinedRejectHandlerCheck(ap[al],ap[al+1])){
 return true;
 }
 }
@@ -9579,22 +9563,23 @@ b.InstallFunctions(z.prototype,2,[
 "promise_reject",DoRejectPromise,
 "promise_resolve",ResolvePromise,
 "promise_then",PromiseThen,
-"promise_handle",PromiseHandle
+"promise_handle",PromiseHandle,
+"promise_debug_get_info",PromiseDebugGetInfo
 ]);
 b.InstallFunctions(c,0,[
 "createPromise",PromiseCreate,
 "resolvePromise",ResolvePromise,
 "rejectPromise",DoRejectPromise
 ]);
-b.Export(function(ar){
-ar.IsPromise=IsPromise;
-ar.PromiseCreate=PromiseCreate;
-ar.PromiseThen=PromiseThen;
-ar.GlobalPromise=z;
-ar.NewPromiseCapability=NewPromiseCapability;
-ar.PerformPromiseThen=PerformPromiseThen;
-ar.ResolvePromise=ResolvePromise;
-ar.RejectPromise=RejectPromise;
+b.Export(function(aq){
+aq.IsPromise=IsPromise;
+aq.PromiseCreate=PromiseCreate;
+aq.PromiseThen=PromiseThen;
+aq.GlobalPromise=z;
+aq.NewPromiseCapability=NewPromiseCapability;
+aq.PerformPromiseThen=PerformPromiseThen;
+aq.ResolvePromise=ResolvePromise;
+aq.RejectPromise=RejectPromise;
 });
 })
 
@@ -9721,7 +9706,7 @@ b.InstallFunctions(c,2,[
 ]);
 })
 
-,async-awaitÑ
+,async-await¹
 (function(a,b,c){
 "use strict";
 %CheckIsBootstrapping();
@@ -9795,7 +9780,7 @@ if((%_DebugIsActive()!=0)&&g(w)){
 AsyncFunctionAwait(v,w,x);
 }
 function RejectPromiseNoDebugEvent(u,B){
-return l(u,B,false);
+return l(u,B);
 }
 function AsyncFunctionPromiseCreate(){
 var u=j();
