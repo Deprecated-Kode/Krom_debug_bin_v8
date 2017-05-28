@@ -2831,7 +2831,7 @@ ApplySingleChunkPatch:ApplySingleChunkPatch
 a.Debug.LiveEdit=bI;
 })
 
-< prologue‰3
+@ prologue‰3
 (function(a,b,c){
 "use strict";
 %CheckIsBootstrapping();
@@ -3027,7 +3027,7 @@ return n;
 if(%IsConstructor(p)){
 return p;
 }
-throw %make_type_error(243);
+throw %make_type_error(242);
 }
 %FunctionSetPrototype(c,new c(0));
 b.Export(function(q){
@@ -3039,61 +3039,65 @@ q.SpeciesConstructor=SpeciesConstructor;
 });
 })
 
-$v8natives½
+$v8natives‘
 (function(a,b){
 %CheckIsBootstrapping();
 var c=a.Object;
 var d=b.ImportNow("iterator_symbol");
+var e=b.ImportNow("object_to_string");
+var f=2|4|1;
 function ObjectToLocaleString(){
 if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"Object.prototype.toLocaleString");
 return this.toString();
 }
-function ObjectIsPrototypeOf(e){
-if(!(%_IsJSReceiver(e)))return false;
-var f=(%_ToObject(this));
-return %HasInPrototypeChain(e,f);
+function ObjectIsPrototypeOf(g){
+if(!(%_IsJSReceiver(g)))return false;
+var h=(%_ToObject(this));
+return %HasInPrototypeChain(g,h);
 }
-function GetMethod(g,h){
-var i=g[h];
-if((i==null))return(void 0);
-if((typeof(i)==='function'))return i;
-throw %make_type_error(15,typeof i);
+function GetMethod(i,j){
+var k=i[j];
+if((k==null))return(void 0);
+if((typeof(k)==='function'))return k;
+throw %make_type_error(15,typeof k);
 }
-function ObjectConstructor(j){
+function ObjectConstructor(l){
 if(c!=new.target&&!(new.target===(void 0))){
 return this;
 }
-if((j===null)||(j===(void 0)))return{};
-return(%_ToObject(j));
+if((l===null)||(l===(void 0)))return{};
+return(%_ToObject(l));
 }
 %SetNativeFlag(c);
 %SetCode(c,ObjectConstructor);
 %AddNamedProperty(c.prototype,"constructor",c,
 2);
 b.InstallFunctions(c.prototype,2,[
+"toString",e,
 "toLocaleString",ObjectToLocaleString,
 "isPrototypeOf",ObjectIsPrototypeOf,
 ]);
-function GetIterator(g,k){
-if((k===(void 0))){
-k=g[d];
+function GetIterator(i,m){
+if((m===(void 0))){
+m=i[d];
 }
-if(!(typeof(k)==='function')){
-throw %make_type_error(73,g);
+if(!(typeof(m)==='function')){
+throw %make_type_error(73,i);
 }
-var l=%_Call(k,g);
-if(!(%_IsJSReceiver(l))){
-throw %make_type_error(67,l);
+var n=%_Call(m,i);
+if(!(%_IsJSReceiver(n))){
+throw %make_type_error(67,n);
 }
-return l;
+return n;
 }
-b.Export(function(m){
-m.GetIterator=GetIterator;
-m.GetMethod=GetMethod;
+b.Export(function(o){
+o.GetIterator=GetIterator;
+o.GetMethod=GetMethod;
+o.ObjectHasOwnProperty=c.prototype.hasOwnProperty;
 });
 })
 
-array9
+array9
 (function(a,b,c){
 "use strict";
 %CheckIsBootstrapping();
@@ -3104,8 +3108,8 @@ var g=b.InternalArray;
 var h=b.InternalPackedArray;
 var i;
 var j;
-var k=a.Object.prototype.hasOwnProperty;
-var l=a.Object.prototype.toString;
+var k;
+var l=b.ImportNow("object_to_string");
 var m=b.ImportNow("iterator_symbol");
 var n=b.ImportNow("unscopables_symbol");
 b.Import(function(o){
@@ -3113,6 +3117,7 @@ d=o.GetIterator;
 e=o.GetMethod;
 i=o.MaxSimple;
 j=o.MinSimple;
+k=o.ObjectHasOwnProperty;
 });
 function ArraySpeciesCreate(p,q){
 q=((q)+0);
@@ -3404,7 +3409,7 @@ if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"Array.pr
 var p=(%_ToObject(this));
 var ad=(%_ToLength(p.length));
 var ae=arguments.length;
-if(ae>9007199254740991-ad)throw %make_type_error(232,ae,ad);
+if(ae>9007199254740991-ad)throw %make_type_error(231,ae,ad);
 for(var x=0;x<ae;x++){
 p[x+ad]=arguments[x];
 }
@@ -4197,7 +4202,7 @@ aD.InnerArrayToLocaleString=InnerArrayToLocaleString;
 ]);
 });
 
-string][
+string‘N
 (function(a,b){
 %CheckIsBootstrapping();
 var c=a.String;
@@ -4352,60 +4357,21 @@ return z;
 }
 return(z-0xD800)*0x400+A+0x2400;
 }
-function StringPad(B,C,D){
-C=(%_ToLength(C));
-var E=B.length;
-if(C<=E)return"";
-if((D===(void 0))){
-D=" ";
-}else{
-D=(%_ToString(D));
-if(D===""){
-return"";
-}
-}
-var F=C-E;
-var G=(F/D.length)|0;
-var H=(F-D.length*G)|0;
-var I="";
-while(true){
-if(G&1)I+=D;
-G>>=1;
-if(G===0)break;
-D+=D;
-}
-if(H){
-I+=%_SubString(D,0,H);
-}
-return I;
-}
-function StringPadStart(C,D){
-if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.padStart");
-var B=(%_ToString(this));
-return StringPad(B,C,D)+B;
-}
-%FunctionSetLength(StringPadStart,1);
-function StringPadEnd(C,D){
-if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.padEnd");
-var B=(%_ToString(this));
-return B+StringPad(B,C,D);
-}
-%FunctionSetLength(StringPadEnd,1);
-function StringRaw(J){
+function StringRaw(B){
 "use strict";
-var K=arguments.length;
-var L=(%_ToObject(J));
-var M=(%_ToObject(L.raw));
-var N=(%_ToLength(M.length));
-if(N<=0)return"";
-var O=(%_ToString(M[0]));
-for(var P=1;P<N;++P){
-if(P<K){
-O+=(%_ToString(arguments[P]));
+var C=arguments.length;
+var D=(%_ToObject(B));
+var E=(%_ToObject(D.raw));
+var F=(%_ToLength(E.length));
+if(F<=0)return"";
+var G=(%_ToString(E[0]));
+for(var H=1;H<F;++H){
+if(H<C){
+G+=(%_ToString(arguments[H]));
 }
-O+=(%_ToString(M[P]));
+G+=(%_ToString(E[H]));
 }
-return O;
+return G;
 }
 b.InstallFunctions(c,2,[
 "raw",StringRaw
@@ -4413,8 +4379,6 @@ b.InstallFunctions(c,2,[
 b.InstallFunctions(c.prototype,2,[
 "codePointAt",StringCodePointAt,
 "match",StringMatchJS,
-"padEnd",StringPadEnd,
-"padStart",StringPadStart,
 "repeat",StringRepeat,
 "search",StringSearch,
 "slice",StringSlice,
@@ -4538,7 +4502,7 @@ var O=new K(L,M,N);
 }
 if(!(%_IsTypedArray(O)))throw %make_type_error(75);
 if((typeof(L)==='number')&&%_TypedArrayGetLength(O)<L){
-throw %make_type_error(259);
+throw %make_type_error(258);
 }
 return O;
 }
@@ -6615,7 +6579,56 @@ b.InstallFunctions(c,2,[
 ]);
 })
 
-i18n’ì
+Xharmony-string-paddingY
+(function(a,b){
+%CheckIsBootstrapping();
+var c=a.String;
+function StringPad(d,e,f){
+e=(%_ToLength(e));
+var g=d.length;
+if(e<=g)return"";
+if((f===(void 0))){
+f=" ";
+}else{
+f=(%_ToString(f));
+if(f===""){
+return"";
+}
+}
+var h=e-g;
+var i=(h/f.length)|0;
+var j=(h-f.length*i)|0;
+var k="";
+while(true){
+if(i&1)k+=f;
+i>>=1;
+if(i===0)break;
+f+=f;
+}
+if(j){
+k+=%_SubString(f,0,j);
+}
+return k;
+}
+function StringPadStart(e,f){
+if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.padStart")
+var d=(%_ToString(this));
+return StringPad(d,e,f)+d;
+}
+%FunctionSetLength(StringPadStart,1);
+function StringPadEnd(e,f){
+if((%IS_VAR(this)===null)||(this===(void 0)))throw %make_type_error(17,"String.prototype.padEnd")
+var d=(%_ToString(this));
+return d+StringPad(d,e,f);
+}
+%FunctionSetLength(StringPadEnd,1);
+b.InstallFunctions(c.prototype,2,[
+"padStart",StringPadStart,
+"padEnd",StringPadEnd
+]);
+});
+
+i18nšì
 (function(a,b){
 "use strict";
 %CheckIsBootstrapping();
@@ -6635,7 +6648,7 @@ var o=b.InstallFunctions;
 var p=b.InstallGetter;
 var q=b.InternalArray;
 var r;
-var s=a.Object.prototype.hasOwnProperty;
+var s=b.ImportNow("ObjectHasOwnProperty");
 var t=b.OverrideFunction;
 var u=b.ImportNow("intl_pattern_symbol");
 var v=b.ImportNow("intl_resolved_symbol");
